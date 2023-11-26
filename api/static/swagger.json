@@ -1,0 +1,1523 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "RESTful API of the platform.",
+    "version": "1.0.0",
+    "title": "Privacy Observatory RESTful API"
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Domainsets",
+      "description": "API for requesting and return domainset"
+    },
+    {
+      "name": "Workers",
+      "description": "API for requesting and return worker"
+    },
+    {
+      "name": "Studies",
+      "description": "API for requesting and return study"
+    },
+    {
+      "name": "Domains",
+      "description": "API for requesting and return domain"
+    },
+    {
+      "name": "Measurments",
+      "description": "API for requesting and return measurement"
+    },
+    {
+      "name": "Users",
+      "description": "API for requesting and return user"
+    },
+    {
+      "name": "Jobs",
+      "description": "Virtual API for handling studys as jobs"
+    },
+    {
+      "name": "Runs",
+      "description": "Virtual API for handling studys as runs"
+    }
+  ],
+  "paths": {
+    "/stats": {
+      "get": {
+        "security": {
+          "basicAuth": []
+        },
+        "summary": "Generate statistics of the platform",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/runs": {
+      "get": {
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Runs"
+        ],
+        "summary": "Returns a list of all runs",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/runRequests"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Runs"
+        ],
+        "summary": "Create a new run",
+        "requestBody": {
+          "description": "Run Request Post Object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/customMeasurementRequests"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          }
+        }
+      }
+    },
+    "/runs/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the run that we want to match",
+          "type": "integer"
+        }
+      ],
+      "get": {
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Runs"
+        ],
+        "summary": "Get run with given ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Runs id",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/runRequest"
+            }
+          },
+          "400": {
+            "description": "Failed. Misunderstood Request."
+          },
+          "404": {
+            "description": "Failed. Runs request not found."
+          }
+        }
+      }
+    },
+    "/jobs/next": {
+      "get": {
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Jobs"
+        ],
+        "summary": "Return the study_id of the next study to perform",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/jobs/heartbeat/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the study_id that we want to match",
+          "type": "integer"
+        }
+      ],
+      "get": {
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Jobs"
+        ],
+        "summary": "Send heartbeat for job of a study",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Study id",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Failed. Misunderstood Request."
+          },
+          "404": {
+            "description": "Failed. Domainsets request not found."
+          }
+        }
+      }
+    },
+    "/domainsets": {
+      "get": {
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Domainsets"
+        ],
+        "summary": "Returns a list of all domainsets",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/domainsetRequests"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Domainsets"
+        ],
+        "summary": "Create a new domainset",
+        "requestBody": {
+          "description": "Domainset Request Post Object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/domainsetRequest"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          }
+        }
+      }
+    },
+    "/domainsets/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the domainset that we want to match",
+          "type": "integer"
+        }
+      ],
+      "get": {
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Domainsets"
+        ],
+        "summary": "Get domainset with given ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Domainsets id",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/domainsetRequest"
+            }
+          },
+          "400": {
+            "description": "Failed. Misunderstood Request."
+          },
+          "404": {
+            "description": "Failed. Domainsets request not found."
+          }
+        }
+      },
+      "put": {
+        "summary": "Edit a domainset request by ID",
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Domainsets"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Domainsets id",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Domainsets Object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/domainsetRequest"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/domainsetRequest"
+            }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Domainsets by ID",
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Domainsets"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Domainsets Id",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          },
+          "400": {
+            "description": "Failed. Misunderstood Request."
+          },
+          "404": {
+            "description": "Failed. Domainsets Request not found."
+          }
+        }
+      }
+    },
+    "/domainsets/run/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the domainset that we want to match",
+          "type": "integer"
+        }
+      ],
+      "get": {
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Domainsets"
+        ],
+        "summary": "Run a domainset with given ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Domainsets id",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Failed. Misunderstood Request."
+          },
+          "404": {
+            "description": "Failed. Domainsets request not found."
+          }
+        }
+      }
+    },
+    "/studys": {
+      "get": {
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Studies"
+        ],
+        "summary": "Returns a list of all Studies",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/studyRequests"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Studies"
+        ],
+        "summary": "Create a new Studies",
+        "requestBody": {
+          "description": "Studies Request Post Object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/studyRequest"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          }
+        }
+      }
+    },
+    "/studys/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the Studies that we want to match",
+          "type": "integer"
+        }
+      ],
+      "get": {
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Studies"
+        ],
+        "summary": "Get Studies with given ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Studies id",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/studyRequest"
+            }
+          },
+          "400": {
+            "description": "Failed. Misunderstood Request."
+          },
+          "404": {
+            "description": "Failed. Study request not found."
+          }
+        }
+      },
+      "put": {
+        "summary": "Edit a Studies request by ID",
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Studies"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Studies id",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Studies Object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/studyRequest"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/studyRequest"
+            }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Studies by ID",
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Studies"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Studies Id",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          },
+          "400": {
+            "description": "Failed. Misunderstood Request."
+          },
+          "404": {
+            "description": "Failed. Studies Request not found."
+          }
+        }
+      }
+    },
+    "/measurements": {
+      "get": {
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Measurments"
+        ],
+        "summary": "Returns a list of all Measurments",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/measurementRequests"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Measurments"
+        ],
+        "summary": "Create a new Measurments",
+        "requestBody": {
+          "description": "Measurments Request Post Object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/measurementRequest"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          }
+        }
+      }
+    },
+    "/measurements/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the Measurments that we want to match",
+          "type": "integer"
+        }
+      ],
+      "get": {
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Measurments"
+        ],
+        "summary": "Get Measurments with given ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Measurments id",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/measurementRequest"
+            }
+          },
+          "400": {
+            "description": "Failed. Misunderstood Request."
+          },
+          "404": {
+            "description": "Failed. Study request not found."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Measurments by ID",
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Measurments"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Measurments Id",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          },
+          "400": {
+            "description": "Failed. Misunderstood Request."
+          },
+          "404": {
+            "description": "Failed. Measurments Request not found."
+          }
+        }
+      }
+    },
+    "/domains": {
+      "get": {
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Domains"
+        ],
+        "summary": "Returns a list of all Domains. Optional, with the ?filter= query parameter, the name of a domain can be searched.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/domainRequests"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Domains"
+        ],
+        "summary": "Create a new Domains",
+        "requestBody": {
+          "description": "Domains Request Post Object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/domainRequest"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          }
+        }
+      }
+    },
+    "/domains/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the Domains that we want to match",
+          "type": "integer"
+        }
+      ],
+      "get": {
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Domains"
+        ],
+        "summary": "Get Domains with given ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Domains id",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/domainRequest"
+            }
+          },
+          "400": {
+            "description": "Failed. Misunderstood Request."
+          },
+          "404": {
+            "description": "Failed. Domains request not found."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Domains by ID",
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Domains"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Domains Id",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          },
+          "400": {
+            "description": "Failed. Misunderstood Request."
+          },
+          "404": {
+            "description": "Failed. Domains Request not found."
+          }
+        }
+      }
+    },
+    "/workers": {
+      "get": {
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Workers"
+        ],
+        "summary": "Returns a list of all Workers",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/workerRequests"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Workers"
+        ],
+        "summary": "Create a new Workers",
+        "requestBody": {
+          "description": "Workers Request Post Object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/workerRequest"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          }
+        }
+      }
+    },
+    "/workers/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the Workers that we want to match",
+          "type": "integer"
+        }
+      ],
+      "get": {
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Workers"
+        ],
+        "summary": "Get Workers with given ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Workers id",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/workerRequest"
+            }
+          },
+          "400": {
+            "description": "Failed. Misunderstood Request."
+          },
+          "404": {
+            "description": "Failed. Workers request not found."
+          }
+        }
+      },
+      "put": {
+        "summary": "Edit a worker request by ID",
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Workers"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Worker id",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Worker Object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/workerRequest"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/workerRequest"
+            }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Workers by ID",
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Workers"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Workers Id",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          },
+          "400": {
+            "description": "Failed. Misunderstood Request."
+          },
+          "404": {
+            "description": "Failed. Workers Request not found."
+          }
+        }
+      }
+    },
+    "/workers/heartbeat/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the Workers that we want to match",
+          "type": "integer"
+        }
+      ],
+      "get": {
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Workers"
+        ],
+        "summary": "Send heartbeat for Workers with given ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Workers id",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/workerRequest"
+            }
+          },
+          "400": {
+            "description": "Failed. Misunderstood Request."
+          },
+          "404": {
+            "description": "Failed. Workers request not found."
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Users"
+        ],
+        "summary": "Returns a list of all Users",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/userRequests"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Users"
+        ],
+        "summary": "Create a new User",
+        "requestBody": {
+          "description": "User Request Post Object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/userRequest"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          }
+        }
+      }
+    },
+    "/users/token": {
+      "get": {
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Users"
+        ],
+        "summary": "Returns the API access token of a User",
+        "responses": {}
+      }
+    },
+    "/users/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the Users that we want to match",
+          "type": "integer"
+        }
+      ],
+      "get": {
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get Users with given ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Users id",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/userRequest"
+            }
+          },
+          "400": {
+            "description": "Failed. Misunderstood Request."
+          },
+          "404": {
+            "description": "Failed. Users request not found."
+          }
+        }
+      },
+      "put": {
+        "summary": "Edit a User request by ID",
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Users id",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Users Object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/userRequest"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/userRequest"
+            }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Users by ID",
+        "security": {
+          "basicAuth": []
+        },
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "User Id",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          },
+          "400": {
+            "description": "Failed. Misunderstood Request."
+          },
+          "404": {
+            "description": "Failed. Domains Request not found."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "basicAuth": {
+        "type": "http",
+        "scheme": "basic"
+      }
+    },
+    "schemas": {
+      "id": {
+        "properties": {
+          "uuid": {
+            "type": "string"
+          }
+        }
+      },
+      "domainsetRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "format": "string"
+          },
+          "generator": {
+            "type": "string",
+            "format": "string"
+          }
+        }
+      },
+      "domainsetRequests": {
+        "type": "object",
+        "properties": {
+          "domainsetRequest": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/domainsetRequest"
+            }
+          }
+        }
+      },
+      "studyRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "format": "string"
+          },
+          "author": {
+            "type": "string",
+            "format": "string"
+          },
+          "composefile": {
+            "type": "string",
+            "format": "string"
+          },
+          "output_format": {
+            "type": "string",
+            "format": "string"
+          },
+          "domainset_id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "limit_domains": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "cron_schedule": {
+            "type": "string",
+            "format": "string"
+          }
+        }
+      },
+      "studyRequests": {
+        "type": "object",
+        "properties": {
+          "studyRequest": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/domainsetRequest"
+            }
+          }
+        }
+      },
+      "measurementRequest": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "format": "string"
+          },
+          "value": {
+            "type": "string",
+            "format": "string"
+          },
+          "study_id": {
+            "type": "string",
+            "format": "string"
+          },
+          "domain_id": {
+            "type": "string",
+            "format": "string"
+          }
+        }
+      },
+      "measurementRequests": {
+        "type": "object",
+        "properties": {
+          "measurementRequest": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/measurementRequest"
+            }
+          }
+        }
+      },
+      "customMeasurementRequests": {
+        "type": "object",
+        "properties": {
+          "study_id": {
+            "type": "string",
+            "format": "string"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "string"
+          },
+          "stats": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/measurementRequest"
+            }
+          },
+          "doms": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/measurementRequest"
+            }
+          }
+        }
+      },
+      "domainRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "format": "string"
+          }
+        }
+      },
+      "domainRequests": {
+        "type": "object",
+        "properties": {
+          "measurementRequest": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/domainsetRequest"
+            }
+          }
+        }
+      },
+      "userRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "format": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "string"
+          }
+        }
+      },
+      "userRequests": {
+        "type": "object",
+        "properties": {
+          "measurementRequest": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/userRequest"
+            }
+          }
+        }
+      },
+      "workerRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "format": "string"
+          }
+        }
+      },
+      "workerRequests": {
+        "type": "object",
+        "properties": {
+          "measurementRequest": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/workerRequest"
+            }
+          }
+        }
+      },
+      "runRequest": {
+        "type": "object",
+        "properties": {
+          "study_id": {
+            "type": "string",
+            "format": "string"
+          },
+          "output": {
+            "type": "string",
+            "format": "string"
+          },
+          "duration": {
+            "type": "string",
+            "format": "string"
+          }
+        }
+      },
+      "runRequests": {
+        "type": "object",
+        "properties": {
+          "measurementRequest": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/runRequest"
+            }
+          }
+        }
+      },
+    }
+  }
+}

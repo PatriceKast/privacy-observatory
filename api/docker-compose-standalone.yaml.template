@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  api:
+    build: 
+      context: . 
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - DB_HOST=db
+      - DB_DATABASE=postgres
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+
+      # Used for JWT Session Tokens
+      - SECRET_KEY=NBJHVFfa_32Zbgnhjm67zbnuf3cjn
+    volumes:
+        - ./:/app/
+    ports:
+        - "5000:5000"
+    command: gunicorn -b :5000 -w 1 --reload app:APP
+
+  db:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    volumes: 
+      - db:/var/lib/postgresql/data
+
+volumes:
+  db:
+    driver: local

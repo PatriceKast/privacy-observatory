@@ -1,0 +1,22 @@
+# run by using: sudo docker-compose up -d --force-recreate
+
+version: "3.4"
+services: 
+    worker:
+        image: docker_worker:local
+        # restart: always
+        privileged: true
+        environment:
+            # always use prefix of http:// or https:// for declaring the host
+            api_host: http://0.0.0.0:5000
+            api_tkn: fa6f0655-a55d-4f63-aca9-67c0095dce54
+        network_mode: "host"
+        build:
+            dockerfile: Dockerfile-worker
+        # used for kompose (kubernetes conversion)
+        labels:
+            kompose.service.type: LoadBalancer
+        volumes:
+            - /opt/input.txt:/opt/input.txt
+            - /opt/output.txt:/opt/output.txt
+            - /var/run/docker.sock:/var/run/docker.sock
